@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-from numpy import uint32 #, binary_repr
+'''
+Pack a pixel into 32 bits with its quality in the high bits.
+'''
+
+from numpy import uint32
 from qp import qp
 
 x8  = uint32(8)
@@ -26,14 +30,3 @@ def unpack(i):
 	g = (i >> x8)  & xff
 	b =  i &  xff
 	return (r, g, b)
-
-'''
-for i in range(1000000):
-	t = (i%256, (i+23)%256, (i+199)%256)
-	p = pack(t)
-	#print bin(int(p))
-	#print binary_repr(p, width=32)
-	u = unpack(p)
-	if t != u:
-		print t, u
-'''
