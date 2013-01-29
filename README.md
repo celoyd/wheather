@@ -3,7 +3,7 @@ Hi! This is a set of scripts for sieving cloudless pixels out of satellite image
 To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
 
 
-To understand how everything fits together here, I'm going to walk you through making a composite. We're going to do this:
+To understand how everything fits together, let's walk you through making a composite. We're going to do this:
 
 1. Download some satellite images.
 2. Split them into strips.
@@ -25,8 +25,9 @@ In OS X by default, I'm pretty sure:
 + curl, for convenient expansions in URLs
 
 If you have pip and Homebrew:
-    $ pip install PIL numpy
-    $ brew install imagemagick jpeg
+
+    pip install PIL numpy
+    brew install imagemagick jpeg
 
 
 # 0
