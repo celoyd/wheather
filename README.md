@@ -34,7 +34,7 @@ If you have pip and Homebrew:
 cd into the wheather directory. We're going to do this sloppy and scatter files every which way.
 
 
-# 1 Download some satellite images
+# 1. Download some satellite images
 
 I'm going to call these images "raw", but of course they are in fact channel-composited, draped, projected, filled with in-band nulls for missing data, and JPEG-compressed between the satellite and us. For *our* purposes they're raw.
 
