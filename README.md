@@ -3,8 +3,7 @@ Hi! This is a set of scripts for sieving cloudless pixels out of satellite image
 To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation at little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
 
 
-
-We're going to do this:
+To understand how everything fits together here, I'm going to walk you through making a composite. We're going to do this:
 
 1. Download some satellite images.
 2. Split them into strips.
@@ -41,7 +40,7 @@ I'm going to call these images "raw", but of course they are in fact channel-com
 
 There are many sources for raws. Let's use http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/
 
-I'm clicking the southernmost grid square on Africa, because I happen to know it works well, but you can do whatever you want. Notice that the rows are named in ascending order, along the y axis, instead of the usual descending order for computer images.
+I'm clicking the southernmost mostly-land grid square on Africa, because I happen to know it works well, but you can do whatever you want. Notice that the rows are named in ascending order, along the y axis, instead of the usual descending order for computer images.
 
 Now I'm looking at http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/modis_page.cfm?regionid=world&modis_tile=r06c22
 
