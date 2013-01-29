@@ -1,3 +1,9 @@
+Hi! This is a set of scripts for sieving cloudless pixels out of satellite images in a fairly fast and foolproof way.
+
+To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation at little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
+
+
+
 We're going to do this:
 
 1. Download some satellite images.
@@ -31,7 +37,7 @@ cd into the wheather directory. We're going to do this sloppy and scatter files 
 
 # 1 Download some satellite images
 
-I'm going to call these images "raw", but of course they are in fact channel-composited, draped, projected, and JPEG-compressed between the satellite and us. For *our* purposes they're raw.
+I'm going to call these images "raw", but of course they are in fact channel-composited, draped, projected, filled with in-band nulls for missing data, and JPEG-compressed between the satellite and us. For *our* purposes they're raw.
 
 There are many sources for raws. Let's use http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/
 
@@ -106,7 +112,7 @@ The main python file for this is buff-cube.py, so called because of an implement
 
 buff-cube.py is hard-coded (on line 12) to generate, from n input images (30 in this case), n/4 + 2 output images. In other words, basically the top quarter of the quality cube. Change that as you see fit. Obviously it should be a parameter eventually.
 
-There's a script called cube-driver.sh whose main purpose is to let you pick how many ores you want to use at once. I have 4 cores on this machine, and I'm okay maxing them all out, so I'm going to type:
+There's a script called cube-driver.sh whose main purpose is to let you pick how many cores you want to use at once. I have 4 cores on this machine, and I'm okay maxing them all out, so I'm going to type:
 
     zsh cube-driver.sh 0 3
 
@@ -134,5 +140,4 @@ And now we splice them together:
 
 Ta-da!
 
-You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images (or they're clearer).
-
+You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images, or they're clearer. But the basics should be clear.
