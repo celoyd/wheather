@@ -20,8 +20,8 @@ In OS X by default, I'm pretty sure:
 + curl, for convenient expansions in URLs
 
 If you have pip and Homebrew:
-$ pip install PIL numpy
-$ brew install imagemagick jpeg
+    $ pip install PIL numpy
+    $ brew install imagemagick jpeg
 
 
 # 0
@@ -31,7 +31,7 @@ cd into the wheather directory. We're going to do this sloppy and scatter files 
 
 # 1 Download some satellite images
 
-I'm going to call these images "raw", but of course they are in fact channel-composited, draped, projected, and JPEG-compressed between the satellite and us. For our purposes they're raw.
+I'm going to call these images "raw", but of course they are in fact channel-composited, draped, projected, and JPEG-compressed between the satellite and us. For *our* purposes they're raw.
 
 There are many sources for raws. Let's use http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/
 
@@ -63,9 +63,9 @@ The structure of the interesting part is:
 
 For simplicity let's get the last 30 days of 2012. That's early winter here, so it should be early summer in SA, which should be around peak greenness. The repeated day code means we have to set a variable to make the download work:
 
-mkdir raws
-cd raws
-for day in 2012{336..365}; do curl -O "http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.1km.jpg"; done
+    mkdir raws
+    cd raws
+    for day in 2012{336..365}; do curl -O "http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.1km.jpg"; done
 
 (We could replace "terra" with "{terra,aqua}" and curl would know what to do, but I'm trying to keep this simple.)
 
@@ -73,8 +73,8 @@ Have a glance at the images. They should be 1024 by 1024, about a quarter of a m
 
 Let's see what a straight average looks like:
 
-cd ..
-python avgimg.py raws/* avg.png
+    cd ..
+    python avgimg.py raws/* avg.png
 
 This is pretty cool in its own right, but from a persnickety point of view we can complain about the mottledness and the dark sawteeth of black missing data along the top.
 
@@ -92,7 +92,7 @@ So. If you cleverly disregarded my use of 1024x images, go in slicey.sh and edit
 
 Here's the slice step:
 
-zsh slicey.sh raws
+    zsh slicey.sh raws
 
 You should now see a folder called raws with directories called 0..7 in it, each with 30 image slices.
 
@@ -108,11 +108,11 @@ buff-cube.py is hard-coded (on line 12) to generate, from n input images (30 in 
 
 There's a script called cube-driver.sh whose main purpose is to let you pick how many ores you want to use at once. I have 4 cores on this machine, and I'm okay maxing them all out, so I'm going to type:
 
-zsh cube-driver.sh 0 3
+    zsh cube-driver.sh 0 3
 
 They're backgrounded so you won't necessarily see a prompt when it's done, just four lines of, in this case, "saving 7". I should fix that. It should run at very roughly one image per 2-3 GHz core per second. Now I'm running the second batch:
 
-zsh cube-driver.sh 4 7
+    zsh cube-driver.sh 4 7
 
 
 
@@ -120,8 +120,8 @@ zsh cube-driver.sh 4 7
 
 Now we have pixel-sorted slices in a directory called cube. Let's average them. To do: script for this.
 
-mkdir final-slices
-for slice in {0..7}; do python avgimg.py cube/$slice/* final-slices/$slice.png; done
+    mkdir final-slices
+    for slice in {0..7}; do python avgimg.py cube/$slice/* final-slices/$slice.png; done
 
 
 
@@ -129,8 +129,8 @@ for slice in {0..7}; do python avgimg.py cube/$slice/* final-slices/$slice.png; 
 
 And now we splice them together:
 
-montage -mode concatenate -tile 1x final-slices/{0..7}.png final.png
-open final.png
+    montage -mode concatenate -tile 1x final-slices/{0..7}.png final.png
+    open final.png
 
 Ta-da!
 
