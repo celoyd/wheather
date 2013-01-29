@@ -6,7 +6,9 @@ Average images with PIL.
 
 avgimg.py input... output
 
-We rely on numpy for capacious but fast types to hold the running sum, and on PIL for reading and writing, including guessing the format you want from the file suffix.
+We rely on numpy for capacious but fast types to hold the running sum, 
+and on PIL for reading and writing, including guessing the format you 
+want from the file suffix.
 
 Todo:
 + More docs
