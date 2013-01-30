@@ -21,6 +21,7 @@ Requirements not included:
 + montage, in the ImageMagick package
 
 In OS X by default, I'm pretty sure:
+
 + zsh, for leading 0s in expansions like {06..01}
 + curl, for convenient expansions in URLs
 
@@ -30,14 +31,14 @@ If you have pip and Homebrew:
     brew install imagemagick jpeg
 
 
-# 0
+# 0.
 
-cd into the wheather directory. We're going to do this sloppy and scatter files every which way.
+cd into the wheather directory. We're going to do this sloppy and scatter files er' which way.
 
 
 # 1. Download some satellite images
 
-I'm going to call these images "raw", but of course they are in fact channel-composited, draped, projected, filled with in-band nulls for missing data, and JPEG-compressed between the satellite and us. For *our* purposes they're raw.
+I'm going to call these images "raw", but in fact they're channel-composed, draped, projected, filled with in-band nulls for missing data, and JPEG-compressed between the satellite and us. For *our* purposes they're raw.
 
 There are many sources for raws. Let's use http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/
 
@@ -110,7 +111,7 @@ Okay! Now we're going to do what I think of as the cube operation -- the actual 
 
 The main python file for this is buff-cube.py, so called because of an implementation detail that I can explain at further length but won't. (Okay, real quick, instead of storing all the pixels, we only store as many as we know we're going to keep, and let incoming good pixels displace them. But to avoid a full re-sort every time a new layer comes in, we buffer new images in small groups. Thus "buff".)
 
-buff-cube.py is hard-coded (on line 12) to generate, from n input images (30 in this case), n/4 + 2 output images. In other words, basically the top quarter of the quality cube. Change that as you see fit. Obviously it should be a parameter eventually.
+buff-cube.py is hard-coded to generate, from n input images (30 in this case), n/4 + 2 output images. In other words, basically the top quartile of quality. Change that as you see fit. Obviously it should be a parameter eventually.
 
 There's a script called cube-driver.sh whose main purpose is to let you pick how many cores you want to use at once. I have 4 cores on this machine, and I'm okay maxing them all out, so I'm going to type:
 
