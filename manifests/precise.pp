@@ -23,24 +23,16 @@ package {
         provider => apt;
 }
 
-package { "zsh":
-	ensure => installed,
-	provider => apt;
-}
-
-exec { "ppa:ubuntugis":
-  command => "/usr/bin/add-apt-repository ppa:ubuntugis && /usr/bin/apt-get update",
-  require => Package['python-software-properties'],
-}
-
-package { "gdal-bin":
-  ensure => latest,
-  require => Exec['ppa:ubuntugis'],
-}
-
-package { "python-gdal": 
-  ensure => latest,
-  require => Package['gdal-bin'],
+package {
+	"zsh":
+		ensure => installed,
+		provider => apt;
+	"imagemagick":
+		ensure => installed,
+		provider => apt;
+	"libjpeg-progs":
+		ensure => installed,
+		provider => apt;
 }
 
 package { "python-pip": 
@@ -52,23 +44,4 @@ package { "numpy":
   provider => pip,
   require => Package['python-pip'],
 }
-
-package { "homebrew": 
-  ensure => latest,
-}
-
-package { "imagemagick": 
-  ensure => latest,
-  provider => brew,
-  require => Package['homebrew'],
-}
-
-package { "jpeg": 
-  ensure => latest,
-  provider => brew,
-  require => Package['homebrew'],
-}
-
-
-
 
