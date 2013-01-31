@@ -39,9 +39,14 @@ package { "python-pip":
   ensure => latest,
 }
 
-package { "numpy": 
-  ensure => latest,
-  provider => pip,
-  require => Package['python-pip'],
+package {
+	"numpy": 
+		ensure => latest,
+		provider => pip,
+		require => Package['python-pip'],
+	"PIL": 
+		ensure => latest,
+		provider => pip,
+		require => Package['python-pip'],
 }
 
