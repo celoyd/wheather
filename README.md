@@ -100,7 +100,7 @@ Here's the slice step:
 
     zsh slicey.sh raws
 
-You should now see a folder called raws with directories called 0..7 in it, each with 30 image slices.
+You should now see a folder called slice with directories called 0..7 in it, each with 30 image slices.
 
 
 
