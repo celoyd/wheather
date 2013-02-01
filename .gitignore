@@ -1,0 +1,6 @@
+*.pyc
+*.swp
+*.db
+.vagrant
+/tmp
+/raws

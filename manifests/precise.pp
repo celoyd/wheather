@@ -27,6 +27,9 @@ package {
 	"zsh":
 		ensure => installed,
 		provider => apt;
+	"curl":
+		ensure => installed,
+		provider => apt;
 	"imagemagick":
 		ensure => installed,
 		provider => apt;
@@ -43,10 +46,10 @@ package {
 	"numpy": 
 		ensure => latest,
 		provider => pip,
-		require => Package['python-pip'],
+		require => Package['python-pip'];
 	"PIL": 
 		ensure => latest,
 		provider => pip,
-		require => Package['python-pip'],
+		require => Package['python-pip'];
 }
 
