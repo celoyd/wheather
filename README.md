@@ -5,11 +5,11 @@ To see things I've done with (various versions of) this tool, please have a look
 
 To understand how everything fits together, let's walk you through making a composite. We're going to do this:
 
-1. Download some satellite images.
-2. Split them into strips.
-3. Sort the strips, pixelwise, to remove cloud cover.
-4. Average the (presumptively) cloudless strips.
-5. Rejoin the strips into a (presumptively) cloudless image.
+1. Download some satellite images
+2. Split them into strips
+3. Sort the strips, pixelwise, to remove cloud cover
+4. Average the (with luck) cloudless strips
+5. Rejoin the strips into a (presumptively) cloudless image
 
 The strip stuff is just for efficient parallelization on a multicore machine and can be skipped.
 
@@ -42,7 +42,7 @@ I'm going to call these images "raw", but in fact they're channel-composed, drap
 
 There are many sources for raws. Let's use http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/
 
-I'm clicking the southernmost mostly-land grid square on Africa, because I happen to know it works well, but you can do whatever you want. Notice that the rows are named in ascending order, along the y axis, instead of the usual descending order for computer images.
+I'm clicking the southernmost mostly-land grid square on Africa, because I happen to know it works well, but you can do whatever you want. Notice that the rows are named in ascending order along the y axis, instead of the usual descending order for computer images.
 
 Now I'm looking at http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/modis_page.cfm?regionid=world&modis_tile=r06c22
 
@@ -68,13 +68,13 @@ The structure of the interesting part is:
 
 .jpg -- "just please go"?
 
-For simplicity let's get the last 30 days of 2012. That's early winter here, so it should be early summer in SA, which should be around peak greenness. The repeated day code means we have to set a variable to make the download work:
+For simplicity let's get the last 30 days of 2012. (Later note: ha, I forgot 2012's a leap year!) That's early winter where I am, so it's early summer in SA, which should be around peak greenness. The repeated day code in the URL means we have to set a variable to make the download work:
 
     mkdir raws
     cd raws
     for day in 2012{336..365}; do curl -O "http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.1km.jpg"; done
 
-(We could replace "terra" with "{terra,aqua}" and curl would know what to do, but I'm trying to keep this simple.)
+(We could replace "terra" with "{terra,aqua}" and curl would know what to do, but let's keep it simple.)
 
 Have a glance at the images. They should be 1024 by 1024, about a quarter of a megabyte, and show a mix of ground cover, clouds, and missing data where the satellite swaths don't overlap. (The MODIS people seemeded to switch from showing missing data as white to black a few months ago. Must remember to look into that.)
 
@@ -87,7 +87,7 @@ This is pretty cool in its own right, but from a persnickety point of view we ca
 
 
 
-# 2. Split them into strips.
+# 2. Split them into strips
 
 Okay, this is the really, really gross part. The script called slicey.sh has a bunch of hardcoded numbers to, as it is now, split 1024 by 1024 images into eight 1024 by 128 images. It does this by taking a given image and throwing it at jpegtran 8 times in a row. My hope is that JPEG decoding is so optimized, and the disk cache is smart enough, that this isn't very slow. My hope is false. This is dumb.
 
@@ -95,7 +95,7 @@ The reason we don't use one of the many fine tile scripts out there is that the 
 
 You can see why I consider this the weak link of my process as it stands.
 
-So. If you cleverly disregarded my use of 1024x images, go in slicey.sh and edit it as appropriate now.
+(If you cleverly disregarded my use of 1024x images, go in slicey.sh and edit it as appropriate now. Better yet, properly parametrize it.)
 
 Here's the slice step:
 
@@ -105,34 +105,34 @@ You should now see a folder called raws with directories called 0..7 in it, each
 
 
 
-# 3. Sort the strips, pixelwise, to remove cloud cover.
+# 3. Sort the strips, pixelwise, to remove cloud cover
 
-Okay! Now we're going to do what I think of as the cube operation -- the actual work of this whole project. Conceptually, we arrange all the pixels in all our images into a rectangular solid (cube, speaking very loosely) and sort every z-axis column by a function that scores pixels according to whether they look like a cloud, then throw away all but the least-cloudy-looking layers.
+Okay! Now we're going to do the sieving -- the actual work of this whole project. Conceptually, we arrange all the pixels in all our images into a rectangular solid and sort every z-axis stack by a function that scores pixels according to whether they look like a cloud. Then we throw away all but the least-cloudy-looking layers and average the rest.
 
 The main python file for this is buff-cube.py, so called because of an implementation detail that I can explain at further length but won't. (Okay, real quick, instead of storing all the pixels, we only store as many as we know we're going to keep, and let incoming good pixels displace them. But to avoid a full re-sort every time a new layer comes in, we buffer new images in small groups. Thus "buff".)
 
-buff-cube.py is hard-coded to generate, from n input images (30 in this case), n/4 + 2 output images. In other words, basically the top quartile of quality. Change that as you see fit. Obviously it should be a parameter eventually.
+buff-cube.py is hard-coded to generate, from n input images (30 in this case), n/4 + 2 output images -- the top quartile of quality, plus a couple to provde some depth in very small sets. Change that as you see fit. Obviously it should be a parameter eventually.
 
 There's a script called cube-driver.sh whose main purpose is to let you pick how many cores you want to use at once. I have 4 cores on this machine, and I'm okay maxing them all out, so I'm going to type:
 
     zsh cube-driver.sh 0 3
 
-They're backgrounded so you won't necessarily see a prompt when it's done, just four lines of, in this case, "saving 7". I should fix that. It should run at very roughly one image per 2-3 GHz core per second. Now I'm running the second batch:
+When finished, the second batch:
 
     zsh cube-driver.sh 4 7
 
 
 
-# 4. Average the (presumptively) cloudless strips.
+# 4. Average the (with luck) cloudless strips
 
 Now we have pixel-sorted slices in a directory called cube. Let's average them. To do: script for this.
 
     mkdir final-slices
     for slice in {0..7}; do python avgimg.py cube/$slice/* final-slices/$slice.png; done
 
+You can change `cube/$slice/*` to say `cube/$slice/{0..5}.png` or whatever to get a finer selection of pixels.
 
-
-# 5. Rejoin the strips into a (presumptively) cloudless image.
+# 5. Rejoin the strips into a (with luck) cloudless image
 
 And now we splice them together:
 
@@ -141,4 +141,4 @@ And now we splice them together:
 
 Ta-da!
 
-You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images, or they're clearer. But the basics should be clear.
+You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images, or they're clearer. But now you should have the grounding to do that with some understanding.
