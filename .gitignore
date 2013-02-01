@@ -1,6 +1,10 @@
 *.pyc
 *.swp
 *.db
+*.png
 .vagrant
 /tmp
 /raws
+/slice
+/cube
+/final-slices
