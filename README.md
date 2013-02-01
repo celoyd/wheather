@@ -141,3 +141,16 @@ And now we splice them together:
 Ta-da!
 
 You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images, or they're clearer. But the basics should be clear.
+
+
+Extra credit: virtual machines
+-
+Included with this repo are some files which will automatically configure a virtual machine running Ubuntu, installing all the required libraries and giving you a "cleanroom" to work in. To do this:
+
+* Install [VirtualBox](https://www.virtualbox.org/)
+* Install [Vagrant](http://www.vagrantup.com/)
+* In the shell of your choice, navigate to your wheather project directory and run: *vagrant up*
+
+Then ssh in to the vm, probably at 127.0.0.1 port 2222; the username and password by default are both *vagrant*.
+
+Your local working directory will be accessible through the vm, in a directory called /vagrant/. All of the commands mentioned above should run there with no trouble.
