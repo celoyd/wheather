@@ -1,6 +1,6 @@
 Hi! This is a set of scripts for sieving cloudless pixels out of satellite images in a fairly fast and foolproof way.
 
-Special thanks to Michal Migurski, @meetar, and Jaques Frechet.
+Special thanks to Michal Migurski, @meetar, and Jaques Frechet for various advice and bug-fixes.
 
 To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
 
