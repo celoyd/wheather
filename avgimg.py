@@ -54,7 +54,7 @@ for imgfile in argv[1:-1]:
 
 print 'Main loop: %s pixels per second.' % ((n * avg.shape[1] * avg.shape[0]) / (time.time() - start))
 
-avg = avg.astype(uint8) # should add support for, like, float32 TIFFs…
+avg = avg.astype(uint8) # should add support for, like, float32 TIFFs...
 
 avgimg = Image.fromarray(avg)
 
