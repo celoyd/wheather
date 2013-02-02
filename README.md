@@ -1,6 +1,6 @@
-Hi! This is a set of scripts for sieving cloudless pixels out of satellite images in a fairly fast and foolproof way.
+Hi! This is a set of scripts for sieving cloudless pixels out of satellite images to make smooth composites.
 
-Special thanks to Michal Migurski, @meetar, and Jacques Frechet for various advice and bug-fixes.
+Thanks to Michal Migurski, @meetar, and Jacques Frechet for pointing out some of the more howling bugs so far. Special thanks to @meetar for the name.
 
 To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
 
@@ -74,15 +74,19 @@ For simplicity let's get the last 30 days of 2012. (Later note: ha, I forgot 201
 
     mkdir raws
     cd raws
-    for day in 2012{336..365}; do curl -O "http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.1km.jpg"; done
+    for day in 2012{336..365}; do
+        curl -O "http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.1km.jpg";
+		done
+		cd ..
 
 (We could replace "terra" with "{terra,aqua}" and curl would know what to do, but let's keep it simple.)
 
 Have a glance at the images. They should be 1024 by 1024, about a quarter of a megabyte, and show a mix of ground cover, clouds, and missing data where the satellite swaths don't overlap. (The MODIS people seemeded to switch from showing missing data as white to black a few months ago. Must remember to look into that.)
 
+## 2.1. Optional sidebar: simple average
+
 Let's see what a straight average looks like:
 
-    cd ..
     python avgimg.py raws/* avg.png
 
 This is pretty cool in its own right, but from a persnickety point of view we can complain about the mottledness and the dark sawteeth of black missing data along the top.
