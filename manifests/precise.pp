@@ -33,7 +33,7 @@ package {
 	"imagemagick":
 		ensure => installed,
 		provider => apt;
-	"libjpeg-progs":
+	"libjpeg-dev":
 		ensure => installed,
 		provider => apt;
 }
