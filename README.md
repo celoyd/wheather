@@ -76,8 +76,8 @@ For simplicity let's get the last 30 days of 2012. (Later note: ha, I forgot 201
     cd raws
     for day in 2012{336..365}; do
         curl -O "http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.1km.jpg";
-		done
-		cd ..
+    done
+    cd ..
 
 (We could replace "terra" with "{terra,aqua}" and curl would know what to do, but let's keep it simple.)
 
