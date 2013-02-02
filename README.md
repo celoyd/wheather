@@ -1,4 +1,4 @@
-Hi! This is a set of scripts for sieving cloudless pixels out of satellite images to make smooth composites.
+Hi! This is a set of scripts for sieving cloudless pixels out of satellite images to make smooth composites. Please consider it an early beta.
 
 Thanks to Michal Migurski, @meetar, and Jacques Frechet for pointing out some of the more howling bugs so far. Special thanks to @meetar for the name.
 
@@ -10,8 +10,8 @@ To understand how everything fits together, let's walk you through making a comp
 1. Download some satellite images
 2. Split them into strips
 3. Sort the strips, pixelwise, to remove cloud cover
-4. Average the (with luck) cloudless strips
-5. Rejoin the strips into a (presumptively) cloudless image
+4. Average the cloudless strips
+5. Rejoin the strips into a cloudless image
 
 The strip stuff is just for efficient parallelization on a multicore machine and can be skipped.
 
@@ -105,7 +105,7 @@ You can see why I consider this the weak link of my process as it stands.
 
 Here's the slice step:
 
-    zsh slicey.sh raws
+    ./slicey.sh raws
 
 You should now see a folder called raws with directories called 0..7 in it, each with 30 image slices.
 
@@ -121,15 +121,15 @@ buff-cube.py is hard-coded to generate, from n input images (30 in this case), n
 
 There's a script called cube-driver.sh whose main purpose is to let you pick how many cores you want to use at once. I have 4 cores on this machine, and I'm okay maxing them all out, so I'm going to type:
 
-    zsh cube-driver.sh 0 3
+    ./cube-driver.sh 0 3
 
 When finished, the second batch:
 
-    zsh cube-driver.sh 4 7
+    ./cube-driver.sh 4 7
 
 
 
-# 4. Average the (with luck) cloudless strips
+# 4. Average the cloudless strips
 
 Now we have pixel-sorted slices in a directory called cube. Let's average them. To do: script for this.
 
@@ -138,7 +138,7 @@ Now we have pixel-sorted slices in a directory called cube. Let's average them. 
 
 You can change `cube/$slice/*` to say `cube/$slice/{0..5}.png` or whatever to get a finer selection of pixels.
 
-# 5. Rejoin the strips into a (with luck) cloudless image
+# 5. Rejoin the strips into a cloudless image
 
 And now we splice them together:
 
