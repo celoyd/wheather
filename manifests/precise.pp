@@ -36,6 +36,9 @@ package {
 	"libjpeg-dev":
 		ensure => installed,
 		provider => apt;
+	"libjpeg-progs":
+		ensure => installed,
+		provider => apt;
 }
 
 package { "python-pip": 
