@@ -2,6 +2,8 @@
 *.swp
 *.db
 *.png
+*.rtf
+*.lnk
 .vagrant
 /tmp
 /raws
