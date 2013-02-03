@@ -9,11 +9,6 @@ year=$2
 day_start=$3
 day_end=$4
 
-# The "path" variable is a generic form of the filepath to be fetched and processed.
-# Note the $day and $res variables in the filename.
-path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.$res.jpg";
-#path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/?subset=Sudan.$day.terra.$res.jpg"
-
 # set defaults if arguments are not included
 if [ -z "$3" ]
 then
@@ -36,6 +31,12 @@ mkdir raws
 cd raws
 
 for day in $(eval echo $year"{$day_start..$day_end}"); do
+
+	# The "path" variable is a generic form of the filepath to be fetched and processed.
+	# Note the $day and $res variables in the filename.
+	path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r06c22/$day/RRGlobal_r06c22.$day.terra.$res.jpg";
+	#path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/?subset=Sudan.$day.terra.$res.jpg"
+
 	# handle dynamic URIs such as "/?subset=Sudan.$day.terra.$res.jpg"
 	# look for an equals sign in the path - if it exists, set the 
 	# output filename to anything after the equals sign
