@@ -1,7 +1,15 @@
 Hi! This is a set of scripts for sieving cloudless pixels out of satellite images in a fairly fast and foolproof way.
 
-To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
+To see things I've done with (various versions of) this tool, please have a look around [http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/] . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
 
+Quickstart
+---
+Once the requirements are installed, run:
+
+    bash dothestuff.sh
+
+Introduction
+---
 
 To understand how everything fits together, let's walk you through making a composite. We're going to do this:
 
@@ -30,7 +38,7 @@ If you have pip and Homebrew:
     brew install imagemagick jpeg
 
 
-# 0
+# 0.
 
 cd into the wheather directory. We're going to do this sloppy and scatter files every which way.
 
