@@ -35,8 +35,7 @@ for day in $(eval echo $year"{$day_start..$day_end}"); do
 	# The "path" variable is a generic form of the filepath to be fetched and processed.
 	# Note the $day and $res variables in the filename.
 	
-	# spain
-	#path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r14c19/$day/RRGlobal_r14c19.$day.terra.$res.jpg"
+	# spain	#path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r14c19/$day/RRGlobal_r14c19.$day.terra.$res.jpg"
 
 	# new zealand
 	path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r05c39/$day/RRGlobal_r05c39.$day.terra.$res.jpg"
