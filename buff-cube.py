@@ -45,8 +45,8 @@ outdir = argv[-1]
 if not os.path.isdir(outdir):
 	print 'no such dir %s' % (outdir)
 	exit(1)
-else:
-	print 'output dir:' + outdir
+# else:
+#	print 'output dir:' + outdir
 size = None
 a = None # who the hell named these variables?
 
@@ -55,12 +55,17 @@ margin_ptr = 0
 for c in range(count):
 	try:
 		img = Image.open(paths[c])
+		#print ("img.mode: "+img.mode)
+		if img.mode != 'RGB':
+			img = img.convert('RGB')
+		#print ("new img.mode: "+img.mode)
 		i = img.load()
 	except IOError as e:
 		print "Error:", e
 		print 'skipping %s' % (paths[c])
 		continue
-
+	
+		
 	print 'loading %s' % (paths[c])
 
 	if size == None:
@@ -70,7 +75,12 @@ for c in range(count):
 	
 	for x in range(size[0]):
 		for y in range(size[1]):
-			a[y, x, clean-1+margin_ptr+1] = pack(i[x, y])
+			try:
+				a[y, x, clean-1+margin_ptr+1] = pack(i[x, y])
+			except:
+				print "Problem - exiting"
+				#raw_input()
+				exit(1)
 	
 	margin_ptr += 1
 	

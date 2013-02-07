@@ -4,7 +4,10 @@ if [ $# -eq 1 ]
 then
 	2=$1
 fi
-mkdir -p cube/{$1..$2}
+
+mkdir -p $(eval echo cube/{$1..$2})
+#echo "cube?"
+#echo `ls cube/`
 
 for slice in {$1..$2}; do
 	python buff-cube.py slice/$slice/*.jpg cube/$slice/

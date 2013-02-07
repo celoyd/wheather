@@ -1,11 +1,23 @@
 #!/bin/zsh
 
-mkdir -p slice/{0..7};
+slices=$2
+# if no argument passed, set slices to 8
+if [ -z "$2" ]; then
+	# (0th-indexed = 7)
+	slices=8
+fi
+
+#mkdir -p slice/{0..7};
+mkdir -p $(eval echo slice/{0..$slices})
 
 cd $1
 
 # get first file in dir
 file=`ls -1 | head -1`
+
+if [ `identify -format %m $file` != "JPEG" ]; then
+	exit("$file is not a jpg!")
+fi
 # get image dimensions of file
 width=`identify -format "%w" $file`
 height=`identify -format "%h" $file`
@@ -13,11 +25,12 @@ height=`identify -format "%h" $file`
 for J in *.jpg; do
 	echo "slicing" $J;
 	# divide height by number of slices to get height of each slice
-	sliceheight=`expr $height / 8`
-	for step in {0..7}; do 
+	sliceplus=`expr $slices + 1`
+	sliceheight=`expr $height / $sliceplus`
+	for step in $(eval echo {0..$slices}); do 
 		offset_height=$(($step * $sliceheight))
-		if [ $step -eq 7 ]
-		then
+		# if the last slice:
+		if [ $step -eq $slices ]; then
 			# make last slice height the remaining height, to account for rounding
 			sliceheight=$(($height - $offset_height))
 		fi
