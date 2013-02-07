@@ -2,8 +2,16 @@ Hi! This is a set of scripts for sieving cloudless pixels out of satellite image
 
 Thanks to Michal Migurski, @meetar, and Jacques Frechet for pointing out some of the more howling bugs so far. Special thanks to @meetar for the name.
 
-To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
+To see things I've done with (various versions of) this tool, please have a look around [http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/] . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
 
+Quickstart
+---
+Once the requirements are installed, run:
+
+    bash dothestuff.sh
+
+Introduction
+---
 
 To understand how everything fits together, let's walk you through making a composite. We're going to do this:
 
@@ -107,7 +115,7 @@ Here's the slice step:
 
     ./slicey.sh raws
 
-You should now see a folder called raws with directories called 0..7 in it, each with 30 image slices.
+You should now see a folder called slice with directories called 0..7 in it, each with 30 image slices.
 
 
 
@@ -147,4 +155,17 @@ And now we splice them together:
 
 Ta-da!
 
-You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images, or they're clearer. But now you should have the grounding to do that with some understanding.
+You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images, or they're clearer. But the basics should be clear.
+
+
+Extra credit: virtual machines
+-
+Included with this repo are some files which will automatically configure a virtual machine running Ubuntu, installing all the required libraries and giving you a "cleanroom" to work in. To do this:
+
+* Install [VirtualBox](https://www.virtualbox.org/)
+* Install [Vagrant](http://www.vagrantup.com/)
+* In the shell of your choice, navigate to your wheather project directory and run: *vagrant up*
+
+Then ssh in to the vm, probably at 127.0.0.1 port 2222; the username and password by default are both *vagrant*.
+
+Your local working directory will be accessible through the vm, in a directory called /vagrant/. All of the commands mentioned above should run there with no trouble.

@@ -30,7 +30,7 @@ avg = array([])
 
 n = float(len(argv)-2) # -1 for our filename, -1 for the ouput file
 
-print 'Averaging %s images.' % (int(n))
+print 'Averaging %s images in %s' % (int(n), argv[1:-1])
 
 start = time.time()
 
@@ -40,7 +40,7 @@ for imgfile in argv[1:-1]:
 	except:
 		print('Could not read "%s"!' % (imgfile))
 		continue
-
+	
 	if avg.shape == (0,):
 			avg = asarray(img).copy()
 			avg = avg.astype(avgtype)

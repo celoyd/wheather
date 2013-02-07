@@ -1,0 +1,13 @@
+*.pyc
+*.swp
+*.db
+*.png
+*.rtf
+*.lnk
+.vagrant
+/tmp
+/raws
+/slice
+/cube
+/final-slices
+/olds
