@@ -75,7 +75,7 @@ for day in $(eval echo $year"{$day_start..$day_end}"); do
 	statuscode=$(curl --write-out %{http_code} --silent --output /dev/null $path)
 	if [ $statuscode == "404" ]; then
 		echo "-- 404 --"
-		exit
+		continue # go to the next iteration of the for loop
 	fi
 	if [[ $outfile ]]; then
 		# specify an output path
