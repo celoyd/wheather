@@ -42,8 +42,8 @@ fi
 mkdir raws
 cd raws
 
-for day in $(eval echo $year"{$day_start..$day_end}"); do
-
+for day in $(eval echo "{$day_start..$day_end}"); do
+	day=$year`printf %03d $day`
 	if [ -z "$5" ]; then
 
 		# The "path" variable is a generic form of the filepath to be fetched and processed.
