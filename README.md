@@ -139,7 +139,7 @@ As you would expect, actual efficiently is significant sublinear to number of co
 
 # 4. Average the cloudless strips
 
-Now we have pixel-sorted slices in a directory called cube. Let's average them. To do: script for this.
+Now we have pixel-sorted slices in a directory called cube. Let's average them. (To do: script for this.)
 
     mkdir final-slices
     for slice in {0..7}; do python avgimg.py cube/$slice/* final-slices/$slice.png; done
@@ -151,15 +151,14 @@ You can change `cube/$slice/*` to say `cube/$slice/{0..5}.png` or whatever to ge
 And now we splice them together:
 
     montage -mode concatenate -tile 1x final-slices/{0..7}.png final.png
-    open final.png
 
-Ta-da!
+Open final.png -- Ta-da!
 
 You can still see some significant artifacts. There's mottling and even a little bit of cloud in the ocean. This will disappear if you use more input images, or they're clearer. But the basics should be clear.
 
 
-Extra credit: virtual machines
--
+# Extra credit: virtual machines
+
 Included with this repo are some files which will automatically configure a virtual machine running Ubuntu, installing all the required libraries and giving you a "cleanroom" to work in. To do this:
 
 * Install [VirtualBox](https://www.virtualbox.org/)
