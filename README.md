@@ -2,7 +2,7 @@ Hi! This is a set of scripts for sieving cloudless pixels out of satellite image
 
 Thanks to Michal Migurski, @meetar, and Jacques Frechet for pointing out some of the more howling bugs so far. Special thanks to @meetar for the name.
 
-To see things I've done with (various versions of) this tool, please have a look around [http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/] . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. I want to do some clearer documentation of the core concept here, but I'm a little busy: feel free to remind me.
+To see things I've done with (various versions of) this tool, please have a look around http://www.flickr.com/photos/vruba/sets/72157631622037685/with/8017203149/ . In the caption for http://www.flickr.com/photos/vruba/8017203149/in/set-72157631622037685 I explained the basic operation a little. This README is about how to run the code, and contains little help on the concept ;)
 
 Quickstart
 ---
@@ -13,7 +13,7 @@ Once the requirements are installed, run:
 Introduction
 ---
 
-To understand how everything fits together, let's walk you through making a composite. We're going to do this:
+To understand how everything fits together, we'll walk through making a composite. We will:
 
 1. Download some satellite images
 2. Split them into strips
@@ -21,14 +21,16 @@ To understand how everything fits together, let's walk you through making a comp
 4. Average the cloudless strips
 5. Rejoin the strips into a cloudless image
 
-The strip stuff is just for efficient parallelization on a multicore machine and can be skipped.
+The strip stuff (mostly isolated in steps 2 and 5) is just for efficient parallelization on a multicore machine and can be skipped.
 
-Requirements not included:
+Requirements:
 
 + PIL, the python image library
 + NumPy, the python math library
 + jpegtran, the JPEG translation utility
 + montage, in the ImageMagick package
+
+Depending on your platform, jpegtran may be part of a package named libjpeg, libjpeg-bin, or something else.
 
 In OS X by default, I'm pretty sure:
 
@@ -40,10 +42,11 @@ If you have pip and Homebrew:
     pip install PIL numpy
     brew install imagemagick jpeg
 
+You may be able to get everything working with pypy instead of python by doing an s/numpy/numpypy/g, but at least with the versions I have, pypy's PIL's pixel access objects are so slow that it's a net speed loss.
 
 # 0.
 
-cd into the wheather directory. We're going to do this sloppy and scatter files er' which way.
+cd into the wheather directory. We're going to do this sloppy-style and scatter files every which way.
 
 
 # 1. Download some satellite images
@@ -56,7 +59,7 @@ I'm clicking the southernmost mostly-land grid square on Africa, because I happe
 
 Now I'm looking at http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/modis_page.cfm?regionid=world&modis_tile=r06c22
 
-Depending on the time of day, you may see nothing, just Terra (morning) images, or morning and afternoon (Aqua) images. If you don't see both, click "previous day" near the top.
+Depending on the time of day, you may see nothing, just Terra (morning) images, or morning and afternoon (Terra and Aqua) images. If you don't see both, click "previous day" near the top.
 
 We want true-color images. For this example, we'll use 1 km imagery. If I click on the Terra 1 km for today, I see: http://www.pecad.fas.usda.gov/cropexplorer/modis_summary/modis_fullpage.cfm?modis_tile=r06c22&dt=2013008&sat_name=terra&img_res=1km&modis_date=01/08/13&cntryid=
 
@@ -89,7 +92,7 @@ For simplicity let's get the last 30 days of 2012. (Later note: ha, I forgot 201
 
 (We could replace "terra" with "{terra,aqua}" and curl would know what to do, but let's keep it simple.)
 
-Have a glance at the images. They should be 1024 by 1024, about a quarter of a megabyte, and show a mix of ground cover, clouds, and missing data where the satellite swaths don't overlap. (The MODIS people seemeded to switch from showing missing data as white to black a few months ago. Must remember to look into that.)
+Have a glance at the images. They should each be 1024 by 1024, about a quarter of a megabyte, and show a mix of ground cover, clouds, and missing data fill where the satellite swaths don't overlap.
 
 ## 2.1. Optional sidebar: simple average
 
@@ -97,17 +100,14 @@ Let's see what a straight average looks like:
 
     python avgimg.py raws/* avg.png
 
-This is pretty cool in its own right, but from a persnickety point of view we can complain about the mottledness and the dark sawteeth of black missing data along the top.
-
+This is pretty cool in its own right, but from a nitpicky point of view we can complain about the general mottledness and the dark sawteeth of black missing data along the top.
 
 
 # 2. Split them into strips
 
 Okay, this is the really, really gross part. The script called slicey.sh has a bunch of hardcoded numbers to, as it is now, split 1024 by 1024 images into eight 1024 by 128 images. It does this by taking a given image and throwing it at jpegtran 8 times in a row. My hope is that JPEG decoding is so optimized, and the disk cache is smart enough, that this isn't very slow. My hope is false. This is dumb.
 
-The reason we don't use one of the many fine tile scripts out there is that the JPEG compression on the raws is already stronger than I'd like. I really don't want to recompress the JPEG.  jpegtran is the only tool I know of that will write out a truly lossless crop of a JPEG region. We could write out PNGs instead of JPEGs, but the disk i/o and storage would be insane. Might still be worth it.
-
-You can see why I consider this the weak link of my process as it stands.
+The reason we don't use one of the many fine tile scripts out there is that the JPEG compression on the raws is already stronger than I'd like. I really don't want to recompress the JPEG.  jpegtran is the only tool I know of that will write out a truly lossless crop of a JPEG region. We could write out PNGs instead of JPEGs, but the disk i/o and storage would be insane for large sets of images.
 
 (If you cleverly disregarded my use of 1024x images, go in slicey.sh and edit it as appropriate now. Better yet, properly parametrize it.)
 
@@ -121,11 +121,11 @@ You should now see a folder called slice with directories called 0..7 in it, eac
 
 # 3. Sort the strips, pixelwise, to remove cloud cover
 
-Okay! Now we're going to do the sieving -- the actual work of this whole project. Conceptually, we arrange all the pixels in all our images into a rectangular solid and sort every z-axis stack by a function that scores pixels according to whether they look like a cloud. Then we throw away all but the least-cloudy-looking layers and average the rest.
+Okay! Now we're going to do the sieving -- the actual work of this whole project. Conceptually, we arrange all the pixels in all our images into a rectangular solid and sort every z-axis stack by a function that scores pixels according to whether they look like a cloud. Then we throw away all but the least cloudy-looking layers and average the rest.
 
 The main python file for this is buff-cube.py, so called because of an implementation detail that I can explain at further length but won't. (Okay, real quick, instead of storing all the pixels, we only store as many as we know we're going to keep, and let incoming good pixels displace them. But to avoid a full re-sort every time a new layer comes in, we buffer new images in small groups. Thus "buff".)
 
-buff-cube.py is hard-coded to generate, from n input images (30 in this case), n/4 + 2 output images -- the top quartile of quality, plus a couple to provde some depth in very small sets. Change that as you see fit. Obviously it should be a parameter eventually.
+buff-cube.py is hard-coded to generate, from n input images (30 in this case), n/4 + 2 output images -- the top quartile of quality, plus a couple to provde some depth in very small sets. Change that as you see fit. Obviously it should be a parameter.
 
 There's a script called cube-driver.sh whose main purpose is to let you pick how many cores you want to use at once. I have 4 cores on this machine, and I'm okay maxing them all out, so I'm going to type:
 
@@ -135,7 +135,7 @@ When finished, the second batch:
 
     ./cube-driver.sh 4 7
 
-
+As you would expect, actual efficiently is significant sublinear to number of cores used.
 
 # 4. Average the cloudless strips
 
