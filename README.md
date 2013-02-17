@@ -109,11 +109,11 @@ Okay, this is the really, really gross part. The script called slicey.sh has a b
 
 The reason we don't use one of the many fine tile scripts out there is that the JPEG compression on the raws is already stronger than I'd like. I really don't want to recompress the JPEG.  jpegtran is the only tool I know of that will write out a truly lossless crop of a JPEG region. We could write out PNGs instead of JPEGs, but the disk i/o and storage would be insane for large sets of images.
 
-(If you cleverly disregarded my use of 1024x images, go in slicey.sh and edit it as appropriate now. Better yet, properly parametrize it.)
+(If you cleverly disregarded my use of 1024x images, go in slicey.sh and edit it as appropriate now. Better yet, properly parametrize it. slicey.sh also hardcoded to look for "raws", which is also too brittle.)
 
 Here's the slice step:
 
-    ./slicey.sh raws
+    ./slicey.sh
 
 You should now see a folder called slice with directories called 0..7 in it, each with 30 image slices.
 
