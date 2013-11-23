@@ -12,6 +12,7 @@ want from the file suffix.
 
 Todo:
 + More docs
++ Use an int type for the running sum
 + Refuse to clobber an existing output file?
 + Better error-checking in general
 
@@ -22,7 +23,7 @@ import Image
 import time
 from numpy import *
 
-avgtype = float32 # 16 for faster and worse, 64 for slower and better
+avgtype = float32
 
 avg = array([])
 # should probably be called running_sum, though, right?
@@ -54,7 +55,7 @@ for imgfile in argv[1:-1]:
 
 print 'Main loop: %s pixels per second.' % ((n * avg.shape[1] * avg.shape[0]) / (time.time() - start))
 
-avg = avg.astype(uint8) # should add support for, like, float32 TIFFs...
+avg = avg.astype(uint8) # should add support for, like, float32 TIFFs
 
 avgimg = Image.fromarray(avg)
 

@@ -11,7 +11,7 @@ mkdir -p $(eval echo cube/{$1..$2})
 #echo `ls cube/`
 
 for slice in {$1..$2}; do
-	./buff-cube.py slice/$slice/*.jpg cube/$slice/ &
+	../../wheather/buff-cube.py slice/$slice/*.jpg cube/$slice/ &
 done
 
 wait
