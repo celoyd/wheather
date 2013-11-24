@@ -14,7 +14,7 @@ output=$7
 
 # set defaults if arguments are not included
 if [ -z "$7" ]; then
-	output="final.png"
+	output="final"
 fi
 if [ -z "$6" ]; then
 	# use 8 slices, 0th-indexed
@@ -22,12 +22,11 @@ if [ -z "$6" ]; then
 else
 	slices=$(( $6 - 1 ))
 fi
-#echo "slices:" $slices
 if [ -z "$3" ]; then
 	# pick a northern-hemisphere-centric summer range
 	day_start=180
 	day_end=210
-	echo "Setting day range to 180..210"
+	echo "Setting day range to "$day_start".."$day_end"."
 fi
 if [ -z "$2" ]; then
 	year="2012"
@@ -42,14 +41,15 @@ fi
 mkdir raws
 cd raws
 
-for day in $(eval echo $year"{$day_start..$day_end}"); do
-
+for day in $(eval echo "{$day_start..$day_end}"); do
+	day=$year`printf %03d $day`
 	if [ -z "$5" ]; then
 
 		# The "path" variable is a generic form of the filepath to be fetched and processed.
 		# Note the $day and $res variables in the filename.
 		
-		# spain	#path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r14c19/$day/RRGlobal_r14c19.$day.terra.$res.jpg"
+		# spain
+    #path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r14c19/$day/RRGlobal_r14c19.$day.terra.$res.jpg"
 
 		# new zealand
 		path="http://lance-modis.eosdis.nasa.gov/imagery/subsets/RRGlobal_r05c39/$day/RRGlobal_r05c39.$day.terra.$res.jpg"
@@ -75,7 +75,7 @@ for day in $(eval echo $year"{$day_start..$day_end}"); do
 	statuscode=$(curl --write-out %{http_code} --silent --output /dev/null $path)
 	if [ $statuscode == "404" ]; then
 		echo "-- 404 --"
-		exit
+		continue # go to the next iteration of the for loop
 	fi
 	if [[ $outfile ]]; then
 		# specify an output path
@@ -96,5 +96,7 @@ for slice in $(eval echo {0..$slices}); do
 	echo "averaging slice # "$slice
 	python avgimg.py cube/$slice/* final-slices/$slice.png;
 done
-montage -mode concatenate -tile 1x $(eval echo final-slices/{0..$slices}.png) $output.png
-echo "wrote file: $output.png"
+montage -mode concatenate -tile 1x $(eval echo final-slices/{0..$slices}.png) $output".png"
+echo "wrote file: "$output".png"
+
+

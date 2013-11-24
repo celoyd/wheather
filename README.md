@@ -165,6 +165,12 @@ Included with this repo are some files which will automatically configure a virt
 * Install [Vagrant](http://www.vagrantup.com/)
 * In the shell of your choice, navigate to your wheather project directory and run: *vagrant up*
 
-Then ssh in to the vm, probably at 127.0.0.1 port 2222; the username and password by default are both *vagrant*.
+Then, ssh in to the vm, probably at 127.0.0.1 port 2222; the username and password by default are both *vagrant*.
 
 Your local working directory will be accessible through the vm, in a directory called /vagrant/. All of the commands mentioned above should run there with no trouble.
+
+When you're done with the vm, you can shut it down from the same window you started it, with *vagrant halt*
+
+### Extra extra credit: multiple cores
+
+If you have multiple cores, and your machine supports hardware virtualization, you are *strongly* encouraged to configure the maximum number of cores allotted to the vm in the VirtualBox options, which will make your processes process much more rapidly. (You may have to shut down the vm first, change the settings in VirtualBox, and then restart the vm.)
