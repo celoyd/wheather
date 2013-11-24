@@ -165,7 +165,7 @@ Included with this repo are some files which will automatically configure a virt
 * Install [Vagrant](http://www.vagrantup.com/)
 * In the shell of your choice, navigate to your wheather project directory and run: *vagrant up*
 
-Then, ssh in to it, probably at 127.0.0.1 port 2222; the username and password by default are both *vagrant*.
+Then, ssh in to the vm, probably at 127.0.0.1 port 2222; the username and password by default are both *vagrant*.
 
 Your local working directory will be accessible through the vm, in a directory called /vagrant/. All of the commands mentioned above should run there with no trouble.
 
